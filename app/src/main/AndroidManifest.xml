@@ -38,7 +38,8 @@
         <!-- Child of Listings Acvitity -->
         <activity
             android:name=".ui.AddListingActivity"
-            android:label="@string/title_activity_add_listing">
+            android:label="@string/title_activity_add_listing"
+            android:windowSoftInputMode="stateVisible">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="crashr.mapshackathon.com.crashr.ui.ListingsActivity" />

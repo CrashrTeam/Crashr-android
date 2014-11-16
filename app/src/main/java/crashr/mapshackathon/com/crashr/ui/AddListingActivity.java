@@ -19,6 +19,7 @@ public class AddListingActivity extends ActionBarActivity {
     private CheckBox mShowerWidget;
     private CheckBox mWeedWidget;
     private EditText mCostWidget;
+    private EditText mAddressWidget;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,7 @@ public class AddListingActivity extends ActionBarActivity {
         mShowerWidget = (CheckBox) findViewById(R.id.add_shower);
         mWeedWidget = (CheckBox) findViewById(R.id.add_weed);
         mCostWidget = (EditText) findViewById(R.id.add_cost);
+        mAddressWidget = (EditText) findViewById(R.id.add_address);
     }
 
     private Listing generateListing() {
@@ -68,6 +70,7 @@ public class AddListingActivity extends ActionBarActivity {
         listing.isShowerAvailable = mShowerWidget.isChecked();
         listing.isWeedAvailable = mWeedWidget.isChecked();
         listing.cost = Integer.valueOf(mCostWidget.getText().toString());
+        listing.address = mAddressWidget.getText().toString();
 
         return listing;
     }
