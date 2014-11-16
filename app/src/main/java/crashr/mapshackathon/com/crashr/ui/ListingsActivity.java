@@ -22,6 +22,7 @@ import java.util.List;
 
 import crashr.mapshackathon.com.crashr.R;
 import crashr.mapshackathon.com.crashr.model.Listing;
+import crashr.mapshackathon.com.crashr.model.SendListingToServiceTask;
 
 public class ListingsActivity extends ActionBarActivity {
     private ListView mListView;
@@ -95,11 +96,14 @@ public class ListingsActivity extends ActionBarActivity {
             int idx = (Integer) extras.get(EDIT_INDEX);
 
             Listing listing = new Gson().fromJson(json, Listing.class);
+            new SendListingToServiceTask(listing).execute();
 
             mListings.set(idx, listing);
         } else if (requestCode == ADD_NEW_LISTING) {
             json = (String) data.getExtras().get(ADD_LISTING_KEY);
             Listing listing = new Gson().fromJson(json, Listing.class);
+            new SendListingToServiceTask(listing).execute();
+
             mListings.add(listing);
         }
 

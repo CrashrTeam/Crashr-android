@@ -22,6 +22,7 @@ public class EditListingActivity extends ActionBarActivity {
     private CheckBox mWeedWidget;
     private EditText mCostWidget;
     private EditText mAddressWidget;
+    private EditText mDescriptionWidget;
 
     private Listing mListing;
     private int mEditingIndex;
@@ -97,6 +98,9 @@ public class EditListingActivity extends ActionBarActivity {
 
         mAddressWidget = (EditText) findViewById(R.id.edit_address);
         mAddressWidget.setText(mListing.address);
+
+        mDescriptionWidget = (EditText) findViewById(R.id.edit_description);
+        mDescriptionWidget.setText(mListing.description);
     }
 
     private Listing generateListing() {
@@ -110,6 +114,7 @@ public class EditListingActivity extends ActionBarActivity {
         listing.cost = (costString == null || costString.isEmpty())
                 ? 0 : Double.valueOf(costString);
         listing.address = mAddressWidget.getText().toString();
+        listing.description = mDescriptionWidget.getText().toString();
 
         return listing;
     }

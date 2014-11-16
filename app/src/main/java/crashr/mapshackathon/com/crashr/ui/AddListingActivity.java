@@ -27,13 +27,13 @@ import crashr.mapshackathon.com.crashr.R;
 import crashr.mapshackathon.com.crashr.model.Listing;
 
 public class AddListingActivity extends ActionBarActivity {
-
     private CheckBox mBreakfastWidget;
     private CheckBox mDinnerWidget;
     private CheckBox mShowerWidget;
     private CheckBox mWeedWidget;
     private EditText mCostWidget;
     private EditText mAddressWidget;
+    private EditText mDescriptionWidget;
     private ImageView mImageView;
 
     private String mCurrentPhotoPath;
@@ -65,11 +65,12 @@ public class AddListingActivity extends ActionBarActivity {
                 break;
             case R.id.action_add_listing:
                 String json = new Gson().toJson(generateListing(), Listing.class);
+
                 Intent sendNewListingBackIntent = new Intent(Intent.ACTION_EDIT);
                 sendNewListingBackIntent.putExtra(ListingsActivity.ADD_LISTING_KEY, json);
                 setResult(ListingsActivity.ADD_NEW_LISTING, sendNewListingBackIntent);
+
                 finish();
-                //NavUtils.navigateUpFromSameTask(this);
                 break;
         }
 
@@ -92,6 +93,7 @@ public class AddListingActivity extends ActionBarActivity {
         mWeedWidget = (CheckBox) findViewById(R.id.add_weed);
         mCostWidget = (EditText) findViewById(R.id.add_cost);
         mAddressWidget = (EditText) findViewById(R.id.add_address);
+        mDescriptionWidget = (EditText) findViewById(R.id.add_description);
         //mImageView = (ImageView) findViewById(R.id.listing_img);
     }
 
@@ -106,6 +108,7 @@ public class AddListingActivity extends ActionBarActivity {
         listing.cost = (costString == null || costString.isEmpty())
                 ? 0 : Double.valueOf(costString);
         listing.address = mAddressWidget.getText().toString();
+        listing.description = mDescriptionWidget.getText().toString();
 
         return listing;
     }
