@@ -6,5 +6,5 @@ public class Listing {
     public boolean isBreakfastAvailable;
     public boolean isWeedAvailable;
     public String address;
-    public int cost;
+    public double cost;
 }

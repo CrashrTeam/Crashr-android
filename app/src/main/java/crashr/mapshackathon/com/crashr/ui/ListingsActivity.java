@@ -12,9 +12,15 @@ import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import crashr.mapshackathon.com.crashr.R;
+import crashr.mapshackathon.com.crashr.model.Listing;
 
 public class ListingsActivity extends ActionBarActivity {
+
+    public static List<Listing> mHackyListings = new ArrayList<Listing>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,8 @@ public class ListingsActivity extends ActionBarActivity {
 
     private void setUpUi() {
         ListView lv = (ListView) findViewById(android.R.id.list);
+        lv.setAdapter(new ListingsAdapter(this, R.layout.listing_layout, mHackyListings));
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.listings_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
