@@ -22,8 +22,8 @@ public class ListingsAdapter extends ArrayAdapter<Listing> {
     private List<Listing> mListings;
     private Context mContext;
 
-    public ListingsAdapter(Context context, int resource,  List<Listing> listings) {
-        super(context, resource);
+    public ListingsAdapter(Context context, List<Listing> listings) {
+        super(context, R.layout.listing_layout, listings);
         mContext = context;
         mListings = listings;
     }

@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -62,8 +64,12 @@ public class AddListingActivity extends ActionBarActivity {
                 Toast.makeText(this, "pictures deferred", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_add_listing:
-                ListingsActivity.mHackyListings.add(generateListing());
-                NavUtils.navigateUpFromSameTask(this);
+                String json = new Gson().toJson(generateListing(), Listing.class);
+                Intent sendNewListingBackIntent = new Intent(Intent.ACTION_EDIT);
+                sendNewListingBackIntent.putExtra(ListingsActivity.ADD_LISTING_KEY, json);
+                setResult(ListingsActivity.ADD_NEW_LISTING, sendNewListingBackIntent);
+                finish();
+                //NavUtils.navigateUpFromSameTask(this);
                 break;
         }
 
