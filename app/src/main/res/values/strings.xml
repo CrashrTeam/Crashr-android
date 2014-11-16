@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Crashr</string>
+    <string name="title_activity_map">Crashr</string>
+    <string name="title_activity_listings">My Listings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_add">Add</string>
+    <string name="action_camera">Picture</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_add_listing">AddListingActivity</string>
+
+</resources>

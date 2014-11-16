@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:compat="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="crashr.mapshackathon.com.crashr.ui.ListingsActivity">
+
+    <item
+        android:id="@+id/action_listings"
+        android:orderInCategory="101"
+        compat:showAsAction="ifRoom"
+        android:title="@string/action_add"
+        android:icon="@drawable/ic_action_search" />
+</menu>
