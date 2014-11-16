@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,16 +22,17 @@ import java.util.List;
 
 import crashr.mapshackathon.com.crashr.R;
 import crashr.mapshackathon.com.crashr.model.Listing;
-import crashr.mapshackathon.com.crashr.util.SystemCallbacks;
 
-public class ListingsActivity extends ActionBarActivity
-    implements SystemCallbacks {
+public class ListingsActivity extends ActionBarActivity {
     private ListView mListView;
-    private List<Listing> mListings = new ArrayList<Listing>();
+    private ArrayList<Listing> mListings = new ArrayList<Listing>();
     private ListingsAdapter mAdapter;
 
     static final int ADD_NEW_LISTING = 1;
-    static final String ADD_LISTING_KEY = "listing";
+    static final int EDIT_LISTING = 2;
+    static final String ADD_LISTING_KEY = "add_listing";
+    static final String EDIT_LISTING_KEY = "edit_listing";
+    static final String EDIT_INDEX = "edit_index";
     static final String HAS_CACHE_KEY = "listing_has_cache";
     static final String SP_LISTINGS = "sp_listings";
 
@@ -40,14 +42,18 @@ public class ListingsActivity extends ActionBarActivity
         setContentView(R.layout.activity_listings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        boolean hascache = getSharedPreferences(SP_LISTINGS, 0)
-                            .getBoolean(HAS_CACHE_KEY, false);
-        if (hascache) {
+        boolean hasCache = getSharedPreferences(SP_LISTINGS, 0)
+                .getBoolean(HAS_CACHE_KEY, false);
+        if (hasCache) {
             String json = getSharedPreferences(SP_LISTINGS, 0)
-                          .getString(ADD_LISTING_KEY, null);
-            Type listingType = new TypeToken<List<Listing>>() {}.getType();
+                    .getString(ADD_LISTING_KEY, null);
+            Type listingType = new TypeToken<List<Listing>>() {
+            }.getType();
 
             mListings = new Gson().fromJson(json, listingType);
+            if (mListings == null) {
+                mListings = new ArrayList<Listing>();
+            }
         }
 
         setUpUi();
@@ -76,34 +82,64 @@ public class ListingsActivity extends ActionBarActivity
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == ADD_NEW_LISTING) {
-            String json = (String) data.getExtras().get("listing");
+        if (data == null || data.getExtras() == null) {
+            return;
+        }
+
+        String json = "";
+
+        if (requestCode == EDIT_LISTING) {
+            Bundle extras = data.getExtras();
+
+            json = (String) extras.get(EDIT_LISTING_KEY);
+            int idx = (Integer) extras.get(EDIT_INDEX);
+
+            Listing listing = new Gson().fromJson(json, Listing.class);
+
+            mListings.set(idx, listing);
+        } else if (requestCode == ADD_NEW_LISTING) {
+            json = (String) data.getExtras().get(ADD_LISTING_KEY);
             Listing listing = new Gson().fromJson(json, Listing.class);
             mListings.add(listing);
+        }
 
-            mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
 
-            SharedPreferences sp = getSharedPreferences(SP_LISTINGS, 0);
-            SharedPreferences.Editor editor = sp.edit();
+        SharedPreferences sp = getSharedPreferences(SP_LISTINGS, 0);
+        SharedPreferences.Editor editor = sp.edit();
 
-            boolean hasCache = sp.getBoolean(HAS_CACHE_KEY, false);
-            if (!hasCache) {
-                editor.putBoolean(HAS_CACHE_KEY, true);
-                editor.apply();
-            }
-
-            Type listingsType = new TypeToken<List<Listing>>(){}.getType();
-            json = new Gson().toJson(mListings, listingsType);
-
-            editor.putString(ADD_LISTING_KEY, json);
+        boolean hasCache = sp.getBoolean(HAS_CACHE_KEY, false);
+        if (!hasCache) {
+            editor.putBoolean(HAS_CACHE_KEY, true);
             editor.apply();
         }
+
+        Type listingsType = new TypeToken<List<Listing>>() {
+        }.getType();
+        json = new Gson().toJson(mListings, listingsType);
+
+        editor.putString(ADD_LISTING_KEY, json);
+        editor.apply();
     }
 
     private void setUpUi() {
         mListView = (ListView) findViewById(android.R.id.list);
         mAdapter = new ListingsAdapter(this, mListings);
         mListView.setAdapter(mAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Listing listing = mListings.get(position);
+
+                String json = new Gson().toJson(listing, Listing.class);
+
+                Intent sendListingForEditIntent = new Intent(ListingsActivity.this, EditListingActivity.class);
+                sendListingForEditIntent.putExtra(EDIT_LISTING_KEY, json);
+                sendListingForEditIntent.putExtra(EDIT_INDEX, position);
+
+                startActivityForResult(sendListingForEditIntent, EDIT_LISTING);
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.listings_fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -115,11 +151,5 @@ public class ListingsActivity extends ActionBarActivity
             }
         });
         fab.attachToListView(mListView);
-    }
-
-    @Override
-    public void onListingsReadFromCache(List<Listing> listings) {
-        mListings.clear();
-        mListings.addAll(listings);
     }
 }

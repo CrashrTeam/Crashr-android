@@ -14,5 +14,7 @@
 
     <!-- Add Listing Stuff -->
     <string name="add_shower">Shower</string>
+    <string name="title_activity_edit_listing">Edit a Listing</string>
+    <string name="action_delete_listing">Delete</string>
 
 </resources>
