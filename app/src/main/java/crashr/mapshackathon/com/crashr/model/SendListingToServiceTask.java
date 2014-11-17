@@ -3,16 +3,9 @@ package crashr.mapshackathon.com.crashr.model;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.client.methods.HttpPost;
-
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 
-/**
- * Created by Phillip on 11/16/2014.
- */
 public class SendListingToServiceTask extends AsyncTask<Void, Void, Void> {
     private Listing mListing;
 
@@ -23,13 +16,13 @@ public class SendListingToServiceTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         String Url = "http://crashr-app-test.appspot.com/addlisting" +
-                     "?un=" + "obama" +
-                     "&st_add=" + mListing.address +
-                     "&city=" + "corvallis" +
-                     "&state=" + "oregon" +
-                     "&zip=" + 97330 +
-                     "&desc=" + mListing.address +
-                     "&food=" + (mListing.isDinnerAvailable ? "true" : "false");
+                "?un=" + "obama" +
+                "&st_add=" + mListing.address +
+                "&city=" + "corvallis" +
+                "&state=" + "oregon" +
+                "&zip=" + 97330 +
+                "&desc=" + mListing.address +
+                "&food=" + (mListing.isDinnerAvailable ? "true" : "false");
 
         Url = Url.replace(" ", "%20");
 

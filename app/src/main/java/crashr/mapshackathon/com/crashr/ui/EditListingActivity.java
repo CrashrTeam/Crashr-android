@@ -52,9 +52,6 @@ public class EditListingActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id) {
             case R.id.home:
@@ -74,7 +71,10 @@ public class EditListingActivity extends ActionBarActivity {
                 finish();
                 break;
             case R.id.action_delete:
-                Toast.makeText(this, "deleting coming soon!", Toast.LENGTH_SHORT).show();
+                Intent deleteIntent = new Intent(Intent.ACTION_DELETE);
+                deleteIntent.putExtra(ListingsActivity.EDIT_INDEX, mEditingIndex);
+                setResult(ListingsActivity.DELETE_LISTING, deleteIntent);
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);

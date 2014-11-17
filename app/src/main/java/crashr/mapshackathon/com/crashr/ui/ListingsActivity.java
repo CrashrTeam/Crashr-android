@@ -31,6 +31,8 @@ public class ListingsActivity extends ActionBarActivity {
 
     static final int ADD_NEW_LISTING = 1;
     static final int EDIT_LISTING = 2;
+    static final int DELETE_LISTING = 3;
+
     static final String ADD_LISTING_KEY = "add_listing";
     static final String EDIT_LISTING_KEY = "edit_listing";
     static final String EDIT_INDEX = "edit_index";
@@ -88,26 +90,39 @@ public class ListingsActivity extends ActionBarActivity {
         }
 
         String json = "";
+        Bundle extras = data.getExtras();
+        Listing listing = null;
 
-        if (requestCode == EDIT_LISTING) {
-            Bundle extras = data.getExtras();
-
-            json = (String) extras.get(EDIT_LISTING_KEY);
-            int idx = (Integer) extras.get(EDIT_INDEX);
-
-            Listing listing = new Gson().fromJson(json, Listing.class);
-            new SendListingToServiceTask(listing).execute();
-
-            mListings.set(idx, listing);
-        } else if (requestCode == ADD_NEW_LISTING) {
-            json = (String) data.getExtras().get(ADD_LISTING_KEY);
-            Listing listing = new Gson().fromJson(json, Listing.class);
-            new SendListingToServiceTask(listing).execute();
-
-            mListings.add(listing);
+        switch (requestCode) {
+            case ADD_NEW_LISTING:
+                json = (String) data.getExtras().get(ADD_LISTING_KEY);
+                listing = new Gson().fromJson(json, Listing.class);
+                new SendListingToServiceTask(listing).execute();
+                mListings.add(listing);
+                break;
+            case EDIT_LISTING:
+                if (resultCode == DELETE_LISTING) {
+                    int index = (Integer) data.getExtras().get(EDIT_INDEX);
+                    mListings.remove(index);
+                } else {
+                    json = (String) extras.get(EDIT_LISTING_KEY);
+                    int idx = (Integer) extras.get(EDIT_INDEX);
+                    listing = new Gson().fromJson(json, Listing.class);
+                    new SendListingToServiceTask(listing).execute();
+                    mListings.set(idx, listing);
+                }
+                break;
         }
 
         mAdapter.notifyDataSetChanged();
+        handleListingsCache();
+    }
+
+    /**
+     * Updates the Listings in the local application cache.
+     */
+    private void handleListingsCache() {
+        String json;
 
         SharedPreferences sp = getSharedPreferences(SP_LISTINGS, 0);
         SharedPreferences.Editor editor = sp.edit();
